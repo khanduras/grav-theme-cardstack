@@ -6,3 +6,12 @@ en:
   CARD_PUBLISHED_LABEL: Published:
   CARD_SOURCE_LABEL: Source
   CARD_VIA_LABEL: Via:
+  
+fr:
+  NAVBAR_CATEGORY_LABEL: Catégories
+  NAVBAR_SEARCH_PLACEHOLDER: Recherche rapide (alt+s)
+  CARD_LAST_MODIFIED_LABEL: Dernière modification :
+  CARD_AUTHOR_LABEL: Auteur :
+  CARD_PUBLISHED_LABEL: Publié :
+  CARD_SOURCE_LABEL: Source
+  CARD_VIA_LABEL: Via :
