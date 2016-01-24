@@ -1,0 +1,43 @@
+title: Menus
+'@extends':
+    type: default
+    context: blueprints://pages
+
+form:
+  fields:
+    tabs:
+
+      fields:
+        menus:
+          type: tab
+          title: Menus
+          fields:
+            header.items:
+              name: menus
+              type: list
+              label: Menus
+              fields:
+                .title:
+                  type: text
+                  label: Title
+                .subtitle:
+                  type: text
+                  label: Subtitle
+                .url:
+                  type: text
+                  label: URL
+                .icon:
+                  type: text
+                  label: Icon
+                .fore_color:
+                  type: text
+                  label: Text Colour
+                .back_color:
+                  type: text
+                  label: Background Colour
+                .li_class:
+                  type: text
+                  label: List Class
+                .anchor_class:
+                  type: text
+                  label: Anchor Class

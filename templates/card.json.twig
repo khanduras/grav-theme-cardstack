@@ -1,0 +1,22 @@
+{
+  "slug": "{{ page.slug|replace(({ ('-'): '_' })) }}",
+  "url": "{{ page.url|replace(({ (base_url ~ '/cards/'): '' }))|replace(({ ('-'): '_' })) }}",
+  "title": "{{ page.title }}",
+  "subtitle": "{{ page.header.subtitle }}",
+  "author_name": "{{ page.header.author.name }}",
+  "author_email": "{{ page.header.author.email}}",
+  "author_compiled": "{% if page.header.author.name %}{% set authors_route = '/authors/' ~ page.header.author.name|lower|replace(({ (' '): '-' }))|replace(({ ('_'): '-' })) %}{% set author_page = page.find(authors_route) %}<span><i class='uk-icon-user'></i> {% if author_page %}<a href='{{ base_url }}/#author/{{ page.header.author.name|lower|replace(({ (' '): '_' })) }}'>{{ page.header.author.name }}</a>{% else %}{{ page.header.author.name }}{% endif %}</span>{% endif %}",
+  "link": "{{ base_url }}/#page/{{ page.url|replace(({ (base_url ~ '/cards/'): '' }))|replace(({ ('-'): '_' }))  }}",
+  "lastmodified": "{{ page.date|nicetime(false) }}",
+  "lastmodified_ticks": "{{ page.date }}",
+  "published_number": "{% if page.header.publish_date %}{{ page.header.publish_date|date('d') }}{% else %}{{ page.date|date('d') }}{% endif %}",
+  "published_month": "{{ page.date|date('M') }}",
+  "image": "{% if page.header.header_image|defined(true) %}{% if page.header.header_image_file %}{{ page.media.images[page.header.header_image_file].url }}{% else %}{{ url('theme://images/default_card_image.jpg') }}{% endif %}{% endif %}",
+  "summary": "{% if page.header.summary.strip_tags %}{% set page_summary = page.summary|striptags %}{% else %}{% set page_summary = page.summary %}{% endif %}{{ page_summary|replace({'\n':'<br>', '\r':'<br>', '<p>': '', '</p>': ''}) }}",
+  "category": "{% if page.taxonomy.category %}{{ page.taxonomy.category|first }}{% else %}{% set pageroute = page.route|lower|replace(({ ('-'): ' ' }))|replace(({ ('/cards/'): '' })) %}{{ pageroute|split('/')|first }}{% endif %}",
+  "category_clean": "{% if page.taxonomy.category %}{{ page.taxonomy.category|first|lower|replace(({ (' '): '_' })) }}{% else %}{% set pageroute = page.route|lower|replace(({ (' '): '_' }))|replace(({ ('-'): '_' }))|replace(({ ('/cards/'): '' })) %}{{ pageroute|split('/')|first }}{% endif %}",
+  "category_slug": "{% set pageroute = page.route|replace(({ ('/cards/'): '' })) %}{{ pageroute|split('/')|first|lower|replace(({ (' '): '_' })) }}",
+  "tags": "{% if page.taxonomy.tag %}{% for keytag in page.taxonomy.tag %}<a href='{{ base_url }}/#keyword/{{ keytag|lower|replace(({ (' '): '_' }))  }}' class='uk-badge tag-filter'>{{ keytag }}</a> {% endfor %}{% endif %}",
+  "tags_clean": "{% if page.taxonomy.tag %}{% for keytag in page.taxonomy.tag %}{{ keytag|lower }}{{ not loop.last ? ', ' }}{% endfor %}{% endif %}",
+  "card_title" : "{% if page.header.link %}{% if page.header.continue_link and page.header.continue_link is not sameas(false) %}<a href='{{ base_url }}/#page/{{ page.route|lower|replace(({ ('-'): '_' }))|replace(({ ('/cards/'): '' })) }}'><i class='uk-icon-{% if page.header.override_link_icon %}{{ page.header.override_link_icon }}{% else %}{{ config.themes.cardstack.continueLinkIcon }}{% endif %}'></i></a> {% endif %}<a href='{{ page.header.link }}' target='_new'>{{ page.title }}</a>{% else %}<a href='{{ base_url }}/#page/{{ page.route|lower|replace(({ ('-'): '_' }))|replace(({ ('/cards/'): '' })) }}'>{{ page.title }}</a>{% endif %}"
+}

@@ -1,0 +1,147 @@
+html, body {
+  height: 100%;
+}
+
+body {
+  background: #d8e0e5;
+}
+
+.wrapper {
+  min-height: 100%;
+  height: auto !important; /* This line and the next line are not necessary unless you need IE6 support */
+  height: 100%;
+  width: 100%;
+  margin: 0 auto -42px; /* the bottom margin is the negative value of the footer's height */
+  z-index: 2 !important;
+  position: relative;
+  margin-bottom: 0px;
+  box-shadow: 0 10px 10px rgba(0,0,0,0.5);
+  background: #d8e0e5;
+}
+
+.uk-navbar {
+  z-index: 1000 !important;
+}
+
+blockquote {
+  }
+  blockquote p {
+    font-size: 1.1rem;
+    color: #999; }
+  blockquote cite {
+    display: block;
+    text-align: right;
+    color: #666;
+    font-size: 1.2rem; }
+
+blockquote {
+  position: relative; }
+
+blockquote blockquote {
+  position: static; }
+
+blockquote > blockquote > blockquote {
+  margin: 0; }
+  blockquote > blockquote > blockquote p {
+    padding: 15px;
+    display: block;
+    font-size: 1rem;
+    margin-top: 0rem;
+    margin-bottom: 0rem;
+    color: #666; }
+    blockquote > blockquote > blockquote p:first-child:before {
+      position: absolute;
+      top: 2px;
+      color: #fff;
+      font-family: FontAwesome;
+      content: '';
+      left: 10px; }
+    blockquote > blockquote > blockquote p:first-child:after {
+      position: absolute;
+      top: 2px;
+      color: #fff;
+      left: 2rem;
+      font-weight: bold;
+      content: 'Info'; }
+  blockquote > blockquote > blockquote > p {
+    margin-left: -61px;
+    border-top: 30px solid #F0B37E;
+    background: #FFF2DB; }
+  blockquote > blockquote > blockquote > blockquote > p {
+    margin-left: -84px;
+    border-top: 30px solid rgba(217, 83, 79, 0.8);
+    background: #FAE2E2; }
+    blockquote > blockquote > blockquote > blockquote > p:first-child:after {
+      content: 'Warning'; }
+  blockquote > blockquote > blockquote > blockquote > blockquote > p {
+    margin-left: -108px;
+    border-top: 30px solid #6AB0DE;
+    background: #E7F2FA; }
+    blockquote > blockquote > blockquote > blockquote > blockquote > p:first-child:after {
+      content: 'Note'; }
+  blockquote > blockquote > blockquote > blockquote > blockquote > blockquote > p {
+    margin-left: -132px;
+    border-top: 30px solid rgba(92, 184, 92, 0.8);
+    background: #E6F9E6; }
+    blockquote > blockquote > blockquote > blockquote > blockquote > blockquote > p:first-child:after {
+      content: 'Tip'; }
+
+code,
+kbd,
+pre,
+samp {
+  font-family: "Inconsolata", monospace; }
+
+code {
+  background: #f9f2f4;
+  color: #9c1d3d;
+  padding: .2rem .4rem;
+  border-radius: 3px; }
+
+pre {
+  padding: 1rem;
+  margin: 2rem 0;
+  background: #f6f6f6;
+  border: 1px solid #ddd;
+  border-radius: 2px;
+  line-height: 1.15;
+  font-size: 1rem; }
+  pre code {
+    color: #237794;
+    background: inherit;
+    font-size: 1rem; }
+
+#tag-filter > .uk-active > * {
+  background: #8cc14c;
+}
+.tag-filter {
+  background: #8cc14c;
+  color: #FFF!important;
+}
+
+textarea, input[type="email"], input[type="number"], input[type="password"], input[type="search"], input[type="tel"], input[type="text"], input[type="url"], input[type="color"], input[type="date"], input[type="datetime"], input[type="datetime-local"], input[type="month"], input[type="time"], input[type="week"], select[multiple=multiple] {
+  background-color: white;
+  border: 1px solid #ddd;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06); 
+  width: 100%}
+  textarea:hover, input[type="email"]:hover, input[type="number"]:hover, input[type="password"]:hover, input[type="search"]:hover, input[type="tel"]:hover, input[type="text"]:hover, input[type="url"]:hover, input[type="color"]:hover, input[type="date"]:hover, input[type="datetime"]:hover, input[type="datetime-local"]:hover, input[type="month"]:hover, input[type="time"]:hover, input[type="week"]:hover, select[multiple=multiple]:hover {
+    border-color: #c4c4c4; }
+  textarea:focus, input[type="email"]:focus, input[type="number"]:focus, input[type="password"]:focus, input[type="search"]:focus, input[type="tel"]:focus, input[type="text"]:focus, input[type="url"]:focus, input[type="color"]:focus, input[type="date"]:focus, input[type="datetime"]:focus, input[type="datetime-local"]:focus, input[type="month"]:focus, input[type="time"]:focus, input[type="week"]:focus, select[multiple=multiple]:focus {
+    border-color: #1BB3E9;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06), 0 0 5px rgba(21, 163, 214, 0.7); }
+
+.form-field .required {
+  color: #F3443F;
+  font-size: 3rem;
+  line-height: 3rem;
+  vertical-align: top;
+  height: 1.5rem;
+  display: inline-block; }
+
+form input {
+  font-weight: 400; }
+
+
+  .hidden {
+    display: none
+}

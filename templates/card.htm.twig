@@ -1,0 +1,70 @@
+<div class="uk-grid">
+    <div class="uk-width-5-6">
+        {% if page.header.link %}
+            <h1>
+                {% if page.header.continue_link and page.header.continue_link is not sameas(false) %}
+                <a href="<%- link %>"><i class="uk-icon-{% if page.header.override_link_icon %}{{ page.header.override_link_icon }}{% else %}{{ config.themes.cardstack.continueLinkIcon }}{% endif %}"></i></a>
+                {% endif %}
+                <a href="{{ page.header.link }}" target="_new">{{ page.title }}</a>
+            </h1>
+        {% else %}
+            <h1><a href="<%- link %>">{{ page.title }}</a></h1>
+        {% endif %}
+    </div>
+    <div class="uk-width-medium-1-6 uk-push--6">
+        {% if page.taxonomy.category %} 
+               <a class="uk-badge" href="{{ base_url }}/#category/<%- category_clean %>">{{ page.taxonomy.category|first }}</a>
+        {% endif %}
+    </div>
+</div>
+<h2><%- subtitle %></h2>
+<p class="uk-article-meta">
+    {% if page.header.author.name %}{{ 'CARD_AUTHOR_LABEL'|t }} 
+        <strong>
+            {% set authors_route = '/authors/' ~ page.header.author.name|lower|replace(({ (' '): '-' }))|replace(({ ('_'): '-' })) %}
+            {% set author_page = page.find(authors_route) %}
+            {% if author_page %}
+                <a href='{{ base_url }}/#author/{{ page.header.author.name|lower|replace(({ (' '): '_' })) }}'>{{ page.header.author.name }}</a>
+            {% else %}
+                {{ page.header.author.name }}
+            {% endif %}
+        </strong>&nbsp;
+    {% endif %}
+    {% if page.header.publish_date %}{{ 'CARD_PUBLISHED_LABEL'|t }} <em>{{ page.header.publish_date|date(config.date_format) }}</em>&nbsp;{% endif %}
+    {% if page.date %}{{ 'CARD_LAST_MODIFIED_LABEL'|t }} <em>{{ page.date|nicetime(true) }}</em>&nbsp;{% endif %}
+</p>
+
+<article class="uk-article">
+    <p>{{ page.content }}</p>
+</article>
+
+<div class="uk-container-center">
+
+    <div class="uk-panel">
+        <div class="uk-grid uk-grid-divider">
+            <div>
+                <p class="uk-article-meta">
+                    {% if header.via.url %}{{ 'CARD_VIA_LABEL'|t }} 
+                        <em>
+                            <a href="{{ header.via.url }}" target="_new">
+                                {% if header.via.text %}{{ header.via.text }}
+                                {% else %}{{ header.via.url }}{% endif %}
+                            </a>
+                        </em> 
+                        <br>
+                    {% endif %}
+                    {% if page.header.sources|length > 0 %}{{ 'CARD_SOURCE_LABEL'|t }}{% if header.sources|length > 1 %}s{% endif %}: 
+                        {% for source in page.header.sources %}
+                        <em><a href="{{ source.url }}" target="_new">{% if source.text %}{{ source.text|trim }}{% else %}{{ source.url|trim }}{% endif %}</a></em>{{ not loop.last ? ',' }}{{ loop.last ? '<br>' }}
+                        {% endfor %}
+                    {% endif %}
+
+                    {% for tag in page.taxonomy.tag %}
+                        <a class="uk-badge tag-filter" href="{{ base_url }}/#keyword/{{ tag }}">{{ tag }}</a>
+                    {% endfor %}
+
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

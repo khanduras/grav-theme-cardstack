@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html class="uk-height-1-1">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>{{ site.title }}</title>
+
+    {% block stylesheets %}
+
+        {% do assets.addCss('theme://css/style.css') %}
+        {% do assets.addCss('theme://css/uikit.min.css') %}
+        {% do assets.addCss('theme://css/uikit.gradient.min.css') %}
+        {% do assets.addCss('theme://css/base.style.css') %}
+        {% do assets.addCss('theme://css/card.style.css') %}
+        
+    {% endblock %}
+    {{ assets.css() }}
+
+    <script type="text/javascript">
+    'use strict';
+    // your JS code goes here
+    var app = {};
+    app.site_title = "{{ site.title }}";
+    app.base_url = "{{ base_url }}";
+    </script>
+
+  </head>
+<body>
+  <!-- ========= -->
+  <!-- Your HTML -->
+  <!-- ========= -->
+  <div class="wrapper">
+    <nav class="uk-navbar uk-navbar-attached" data-uk-sticky="{top:0}">
+      <div class="uk-navbar-content">
+        <a href="{{ base_url }}/#" class="uk-navbar-brand"><i class="uk-icon-home"></i> {{ site.title }}</a>
+        <ul class="uk-navbar-nav">
+          {% set taxlist = taxonomylist.get() %}
+
+          {% if taxlist['category'] %}
+              <li class="uk-parent" data-uk-dropdown="{mode:'hover'}">
+                <a><i class="uk-icon-list-alt"></i> {{ 'NAVBAR_CATEGORY_LABEL'|t }} <i class="uk-icon-caret-down"></i></a>
+                <div class="uk-dropdown uk-dropdown-navbar uk-dropdown-top uk-dropdown-scrollable">
+                  <ul class="uk-nav uk-nav-navbar">
+                    {% for tax,value in taxlist['category'] %}
+                      <li><a href="{{ base_url }}/#{{ tax|lower|replace(({ (' '): '_' })) }}">{{ tax|titleize }}</a></li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </li>
+          {% endif %}
+
+    
+      
+          {% set navbar_menus = page.find('/menus/navbar').header.items %}
+          {% for button in navbar_menus %}
+              {% if button.url %} 
+                  <li {% if button.li_class %}class="{{ button.li_class }}"{% endif %}><a class="{% if button.subtitle %}uk-navbar-nav-subtitle {% endif %}{% if button.anchor_class %}{{ button.anchor_class }}{% endif %}" href="{{ button.url }}" style="{% if button.back_color %}background: {{ button.back_color }};{% endif %}{% if button.fore_color %}color: {{ button.fore_color }};{% endif %}">{% if button.icon %}<i class="uk-icon-{{ button.icon }}"></i> {% endif %}{% if button.title %}{{ button.title }}{% endif %}{% if button.subtitle %}<div>{{ button.subtitle }}</div>{% endif %}</a></li>
+              {% endif %}
+          {% endfor %}
+
+        </ul>
+      </div>
+      <div class="uk-container uk-navbar-flip">
+        <form id="dropSource" class="uk-search uk-form uk-form-icon">
+          <i class="uk-icon-search"></i> 
+          <input id="searchInput" class="uk-form-large uk-width-1-1" type="search" placeholder="{{ 'NAVBAR_SEARCH_PLACEHOLDER'|t }} " data-search-input>
+        </form> 
+      </div>
+    </nav>
+    <div class="uk-container uk-container-center">
+      <section id="card_app">
+        <div class="uk-grid">
+          <div class="uk-width-1-1">
+            <p>&nbsp;</p>
+          </div>
+          <div id="card_page" class="uk-width-1-1">
+            <p>&nbsp;</p>
+          </div>
+          <div class="uk-width-1-1">
+            <div id="card_view" class="uk-grid-width-small-1-{{ config.themes.cardstack.cardview.columns.small }} uk-grid-width-medium-1-{{ config.themes.cardstack.cardview.columns.medium }} uk-grid-width-large-1-{{ config.themes.cardstack.cardview.columns.large }} uk-grid-width-xlarge-1-{{ config.themes.cardstack.cardview.columns.xlarge }}">
+              <p><i class="uk-icon-refresh uk-icon-spin"></i> Loading...</p>
+            </div>
+          </div>
+          <div class="uk-width-1-1">
+            <p>&nbsp;</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+  </div>
+
+  <!-- ========= -->
+  <!-- Templates -->
+  <!-- ========= -->
+  <script type="text/template" id="card-template">
+    <article class="card">
+      <header class="card__thumb">
+        <a href="<%- link %>"><img src="<%- image %>" ></a>
+      </header>
+      <div class="card__date">
+        <span class="card__date__day"><%- published_number %></span>
+        <span class="card__date__month"><%- published_month %></span>
+      </div>
+      <div class="card__body">
+        <div class="card__category"><a href="{{ base_url }}/#category/<%- category_clean %>"><%- category %></a></div>
+        <div class="card__title"><%= card_title %></div>
+        <div class="card__subtitle"><%- subtitle %></div>
+        <p class="card__description"><%= summary %></p>
+      </div>
+      <div class="card__footer">
+        <div class="card__keywords"><%= tags %></div>
+        <span><i class="uk-icon-clock-o"></i> <%- lastmodified %></span>
+        <%= author_compiled %>
+      </div>
+
+    </article>
+  </script>  
+
+  <!-- ========= -->
+  <!-- Libraries -->
+  <!-- ========= -->
+
+  {% block js_libraries %}
+      {% do assets.addJs('jquery',101) %}
+      {% do assets.addJs('theme://js/libs/underscore-min.js',100) %}
+      {% do assets.addJs('theme://js/libs/backbone-min.js',100) %}
+      {% do assets.addJs('theme://js/libs/uikit.min.js',100) %}
+      {% do assets.addJs('theme://js/libs/components/grid.min.js',100) %}
+      {% do assets.addJs('theme://js/libs/components/sticky.min.js',100) %}
+      {% do assets.addJs('theme://js/libs/components/dropdown.min.js',100) %}
+      {% do assets.addJs('theme://js/plugins/jquery.hotkeys.js',100) %}
+  {% endblock %}
+
+
+ {% do assets.addJs('theme://js/models/Card.js',100) %}
+
+  <!-- =============== -->
+  <!-- Scripts -->
+  <!-- =============== -->  
+
+  {% do assets.addJs('theme://js/scripts/ApplicationRouter.js',100) %}
+  {% do assets.addJs('theme://js/views/CardView.js',100) %}
+  {% do assets.addJs('theme://js/views/AppView.js',100) %}
+  {% do assets.addJs('theme://js/views/PageView.js',100) %}
+  {% do assets.addJs('theme://js/views/AuthorView.js',100) %}
+  {{ assets.js() }}
+  <!-- =============== -->
+  <!-- Javascript code -->
+  <!-- =============== -->
+  <script type="text/javascript">
+
+
+    window.renderTemplate = function(name, el, json) {
+      var url = '{{ base_url }}' + name.replace(/_/g, '-') + '.htm';
+      $.ajax({
+        url: url,
+        method: 'GET',
+        async: false,
+        dataType: 'html',
+        success: function(data) {
+          var tmpl = _.template(data);
+          $(el).html(tmpl(json));
+        }
+      });
+    }
+
+    function cleanArray(actual) {
+      var newArray = new Array();
+      for (var i = 0; i < actual.length; i++) {
+        if (actual[i]) {
+          newArray.push(actual[i]);
+        }
+      }
+      return newArray;
+    }
+
+    function getCardJSON(cardURL) {
+
+      var result="";
+      $.ajax({
+        url: cardURL + '.json',
+        method: 'GET',
+        async: false,
+        dataType: 'text',
+        success: function(data) {
+           result = data; 
+        }
+     });
+     return result;
+   }
+
+    //--------------
+    // Collections
+    //--------------
+    app.CardList = Backbone.Collection.extend({
+      model: app.Card,
+      sortByField: function(field, direction){
+        var sorted = _.sortBy(this.models, function(model){
+            return model.get(field);
+        });
+        if(direction === 'descending'){
+            sorted = sorted.reverse()
+        }
+        this.models = sorted;
+      }      
+    });
+
+    
+    //--------------
+    // Cards
+    //--------------
+
+    {% macro cardlistloop(stack) %}{% for card in stack %}{% if card.header.publish_date %}{{ loop.first ? ', ' }}card_{{ card.slug|replace(({ ('-'): '_' })) }}{{ not cardlistloop.last ? ', ' }}{% endif %}{% if card.children.count > 0 %}{{ _self.cardlistloop(card.children) }}{% endif %}{% endfor %}{% endmacro %}
+
+    {% macro cardstackloop(stack) %}
+        {% for card in stack %}
+          {% if card.children.count > 0 %}
+            {{ _self.cardstackloop(card.children) }}
+          {% endif %}
+          {% if card.header.publish_date %}var card_{{ card.slug|replace(({ ('-'): '_' })) }} = new app.Card($.parseJSON(getCardJSON("{{ card.url|e }}")));
+          {% endif %}
+        {% endfor %}
+    {% endmacro %}
+
+    {% set cardstack = page.find('/cards').children %}
+    {{ _self.cardstackloop(cardstack) }}
+
+    // instance of the Collection
+    app.cardList = new app.CardList(cleanArray([{{ _self.cardlistloop(cardstack) }}])); 
+
+    //--------------
+    // Initializers
+    //-------------- 
+    app.eventAggregator = _.extend(app, Backbone.Events);
+
+    app.appView = new app.AppView();
+
+    $(document).ready(function() {
+
+      app.cardgrid = UIkit.grid($("#card_view"), { gutter:10, duration:0 });
+      app.router = new app.Router();
+
+      app.eventAggregator.on('domchange:title', function (title) {
+        $(document).attr('title', title);
+      });
+
+      Backbone.history.start();
+
+      $(document).bind('keyup', 'alt+s', function () { $('[data-search-input]').focus() });
+      $(document).bind('keydown', 'ctrl+alt+d', function () { window.location = "{{ base_url ~ config.plugins.admin.route }}"; });
+
+      $('[data-search-input]').on("click", function () {
+         $(this).select();
+      });
+
+      $('#dropSource').on('submit', function(event) {
+          event.preventDefault();
+      });
+
+      var search_in_use;
+
+      $('[data-search-input]').on("keydown", function (event) { 
+        if (event.keyCode == 18) {
+          search_in_use = true; 
+        }
+      });
+
+
+      $('[data-search-input]').on("keyup", function (event) {
+          if (event.keyCode == 18) {
+            event.preventDefault();
+            search_in_use = false;
+          } else if (($(this).val() == '') && (/[a-zA-Z0-9-_ ]/.test(event.keyCode)) && !search_in_use) {
+            app.router.navigate('/', {trigger: true, replace: false} );
+          } else if (/[a-zA-Z0-9-_ ]/.test(event.keyCode) && !search_in_use) {
+            app.router.navigate('/search/' + $(this).val(), {trigger: true, replace: false} );
+          }
+      });
+
+    });
+
+    
+
+
+  </script>
+  
+</body>
+</html>
