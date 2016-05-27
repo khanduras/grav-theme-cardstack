@@ -1,7 +1,7 @@
 app.AuthorView = Backbone.View.extend({
   tagName: 'div',
   render: function(eventName) {
-    renderTemplate('/authors/' + app.Author.toLowerCase(), this.el, null);
+    app.renderTemplate('/authors/' + app.Author.toLowerCase(), this.el, null);
     return this;
   },
 /*  render: function(){
@@ -9,6 +9,7 @@ app.AuthorView = Backbone.View.extend({
     return this; // enable chained calls
   },*/
   initialize: function(){
+    this.render();
   //  this.model.on('change', this.render, this);
   //  this.model.on('destroy', this.remove, this); // remove: Convenience Backbone's function for removing the view from the DOM
   },      

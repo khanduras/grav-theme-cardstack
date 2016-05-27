@@ -15,8 +15,9 @@ app.AppView = Backbone.View.extend({
   },
   addOne: function(card){
     var view = new app.CardView({model: card});
-    $('#card_view').append(view.render().el);
-    app.cardgrid.init();
+    view.model.set('dataCaptured', false);
+    view.initialize();
+    
   },
   addAll: function(){
     this.$('#card_view').html('');
@@ -42,6 +43,7 @@ app.AppView = Backbone.View.extend({
     });
     _.each(KeywordsFiltered, this.addOne);
     app.eventAggregator.trigger('domchange:title', app.Keyword + ' - ' + app.site_title);
+    app.cardgrid.init();
   },
   filterCategory: function(){
     this.$('#card_view').html(''); 
@@ -58,6 +60,7 @@ app.AppView = Backbone.View.extend({
     });
     _.each(CategoriesFiltered, this.addOne);
     app.eventAggregator.trigger('domchange:title', app.Category.replace(/_/g, ' ') + ' - ' + app.site_title);
+    app.cardgrid.init();
   },
   selectPage: function(){
     this.$('#card_view').html(''); 
@@ -69,6 +72,7 @@ app.AppView = Backbone.View.extend({
     app.cardgrid.init();
     view = '';
     app.eventAggregator.trigger('domchange:title', RouteToModel.get('title') + ' - ' + app.site_title);
+    app.cardgrid.init();
   },
   searchTerm: function(){
     this.$('#card_view').html(''); 
@@ -83,10 +87,12 @@ app.AppView = Backbone.View.extend({
     });
     _.each(TermsSearched, this.addOne);
     app.eventAggregator.trigger('domchange:title', app.SearchTerm + ' - ' + app.site_title);
+    app.cardgrid.init();
   },
   author: function(){
     this.$('#card_view').html(''); 
     this.$('#card_page').html('');
+
     app.cardList.sortByField('lastmodified_ticks','descending');
     var AuthorCards = app.cardList.filter(function(model) {
         return _.any(model.attributes, function(val, attr) {
@@ -107,5 +113,6 @@ app.AppView = Backbone.View.extend({
     var view = new app.AuthorView({});
     $('#card_page').html(view.render().el);
     app.eventAggregator.trigger('domchange:title', app.Author + ' - ' + app.site_title);
+    app.cardgrid.init();
   }
 });

@@ -14,7 +14,7 @@ app.Router = Backbone.Router.extend({
       $('.nav_menu_child_menu').removeClass('hidden');
       this.setActiveEntry('/#' + slug);
     } else {
-      app.cardList.trigger('reset');
+      app.cardList.trigger('reset',{ init: true });
       this.setActiveEntry(null);
       $('.nav_menu_child_menu').addClass('hidden');
     }
@@ -47,7 +47,6 @@ app.Router = Backbone.Router.extend({
   search: function(keyword) {
     app.SearchTerm = keyword;
     app.cardList.trigger('search_keyword');
-    app.cardgrid.init();
     $('[data-search-input]').val(keyword);
     this.setActiveEntry(null);
     $('.nav_menu_child_menu').removeClass('hidden');
@@ -55,7 +54,6 @@ app.Router = Backbone.Router.extend({
   author: function(author) {
     app.Author = author;
     app.cardList.trigger('author');
-    app.cardgrid.init();
     $('[data-search-input]').val("");
     this.setActiveEntry(null);
     $('.nav_menu_child_menu').removeClass('hidden');

@@ -1,3 +1,10 @@
+# v1.1.0
+## 05/26/2016
+
+1. [](#new)
+    * Mobile support
+    * Dynamically loads cards
+
 # v1.0.0
 ## 01/23/2016
 

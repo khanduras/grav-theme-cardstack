@@ -142,6 +142,13 @@ form input {
   font-weight: 400; }
 
 
-  .hidden {
-    display: none
+.hidden {
+  display: none
+}
+
+/* Main part of overlay fix*/
+.uk-offcanvas-page {
+  margin-left: 0px !important; 
+  margin-right: 0px !important;
+  width: 100% !important; 
 }

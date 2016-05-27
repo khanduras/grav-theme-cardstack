@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html class="uk-height-1-1">
+<html class="uk-height-1-1" lang="{{ grav.language.getActive ?: theme_config.default_lang }}">
   <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>{{ site.title }}</title>
 
     {% block stylesheets %}
@@ -29,15 +29,39 @@
   <!-- ========= -->
   <!-- Your HTML -->
   <!-- ========= -->
+
+  <div class="uk-offcanvas" id="offcanvas-mobile">
+    <div class="uk-offcanvas-bar">
+      <ul class="uk-nav uk-nav-offcanvas uk-nav-parent-icon" data-uk-nav="">
+        <li><a href="{{ base_url }}/#"><i class="uk-icon-home"></i> {{ site.title }}</a></li>
+        {% set taxlist = taxonomylist.get() %}
+
+        {% if taxlist['category'] %}
+          {% for tax,value in taxlist['category'] %}
+            <li><a href="{{ base_url }}/#{{ tax|lower|replace(({ (' '): '_' })) }}">{{ tax|titleize }}</a></li>
+          {% endfor %}
+        {% endif %}
+
+        {% set navbar_menus = page.find('/menus/navbar').header.items %}
+        {% for button in navbar_menus %}
+            {% if button.url %} 
+                <li {% if button.li_class %}class="{{ button.li_class }}"{% endif %}><a class="{% if button.subtitle %}uk-navbar-nav-subtitle {% endif %}{% if button.anchor_class %}{{ button.anchor_class }}{% endif %}" href="{{ button.url }}" style="{% if button.back_color %}background: {{ button.back_color }};{% endif %}{% if button.fore_color %}color: {{ button.fore_color }};{% endif %}">{% if button.icon %}<i class="uk-icon-{{ button.icon }}"></i> {% endif %}{% if button.title %}{{ button.title }}{% endif %}{% if button.subtitle %}<div>{{ button.subtitle }}</div>{% endif %}</a></li>
+            {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
   <div class="wrapper">
     <nav class="uk-navbar uk-navbar-attached" data-uk-sticky="{top:0}">
+
       <div class="uk-navbar-content">
+        <a href="#" class="uk-hidden-medium uk-hidden-large uk-navbar-toggle" data-uk-offcanvas="{target:'#offcanvas-mobile'}"></a>
         <a href="{{ base_url }}/#" class="uk-navbar-brand"><i class="uk-icon-home"></i> {{ site.title }}</a>
         <ul class="uk-navbar-nav">
           {% set taxlist = taxonomylist.get() %}
 
           {% if taxlist['category'] %}
-              <li class="uk-parent" data-uk-dropdown="{mode:'hover'}">
+              <li class="uk-parent uk-hidden-small" data-uk-dropdown="{mode:'hover'}">
                 <a><i class="uk-icon-list-alt"></i> {{ 'NAVBAR_CATEGORY_LABEL'|t }} <i class="uk-icon-caret-down"></i></a>
                 <div class="uk-dropdown uk-dropdown-navbar uk-dropdown-top uk-dropdown-scrollable">
                   <ul class="uk-nav uk-nav-navbar">
@@ -54,7 +78,7 @@
           {% set navbar_menus = page.find('/menus/navbar').header.items %}
           {% for button in navbar_menus %}
               {% if button.url %} 
-                  <li {% if button.li_class %}class="{{ button.li_class }}"{% endif %}><a class="{% if button.subtitle %}uk-navbar-nav-subtitle {% endif %}{% if button.anchor_class %}{{ button.anchor_class }}{% endif %}" href="{{ button.url }}" style="{% if button.back_color %}background: {{ button.back_color }};{% endif %}{% if button.fore_color %}color: {{ button.fore_color }};{% endif %}">{% if button.icon %}<i class="uk-icon-{{ button.icon }}"></i> {% endif %}{% if button.title %}{{ button.title }}{% endif %}{% if button.subtitle %}<div>{{ button.subtitle }}</div>{% endif %}</a></li>
+                  <li {% if button.li_class %}class="uk-hidden-small {{ button.li_class }}"{% endif %}><a class="{% if button.subtitle %}uk-navbar-nav-subtitle {% endif %}{% if button.anchor_class %}{{ button.anchor_class }}{% endif %}" href="{{ button.url }}" style="{% if button.back_color %}background: {{ button.back_color }};{% endif %}{% if button.fore_color %}color: {{ button.fore_color }};{% endif %}">{% if button.icon %}<i class="uk-icon-{{ button.icon }}"></i> {% endif %}{% if button.title %}{{ button.title }}{% endif %}{% if button.subtitle %}<div>{{ button.subtitle }}</div>{% endif %}</a></li>
               {% endif %}
           {% endfor %}
 
@@ -62,8 +86,8 @@
       </div>
       <div class="uk-container uk-navbar-flip">
         <form id="dropSource" class="uk-search uk-form uk-form-icon">
-          <i class="uk-icon-search"></i> 
-          <input id="searchInput" class="uk-form-large uk-width-1-1" type="search" placeholder="{{ 'NAVBAR_SEARCH_PLACEHOLDER'|t }} " data-search-input>
+          <i class="uk-icon-search uk-hidden-medium uk-hidden-small"></i> 
+          <input id="searchInput" class="uk-hidden-medium uk-hidden-small uk-form-large uk-width-1-1" type="search" placeholder="{{ 'NAVBAR_SEARCH_PLACEHOLDER'|t }} " data-search-input>
         </form> 
       </div>
     </nav>
@@ -151,18 +175,15 @@
   <script type="text/javascript">
 
 
-    window.renderTemplate = function(name, el, json) {
+    app.renderTemplate = function(name, el, json) {
       var url = '{{ base_url }}' + name.replace(/_/g, '-') + '.htm';
-      $.ajax({
-        url: url,
-        method: 'GET',
-        async: false,
-        dataType: 'html',
-        success: function(data) {
+      $.when( $.ajax(url) ).done(function (data) {
+
           var tmpl = _.template(data);
           $(el).html(tmpl(json));
-        }
+
       });
+                
     }
 
     function cleanArray(actual) {
@@ -175,7 +196,7 @@
       return newArray;
     }
 
-    function getCardJSON(cardURL) {
+    app.getCardJSON = function(cardURL) {
 
       var result="";
       $.ajax({
@@ -203,7 +224,7 @@
             sorted = sorted.reverse()
         }
         this.models = sorted;
-      }      
+      }
     });
 
     
@@ -218,7 +239,8 @@
           {% if card.children.count > 0 %}
             {{ _self.cardstackloop(card.children) }}
           {% endif %}
-          {% if card.header.publish_date %}var card_{{ card.slug|replace(({ ('-'): '_' })) }} = new app.Card($.parseJSON(getCardJSON("{{ card.url|e }}")));
+          {% if card.header.publish_date %}var card_{{ card.slug|replace(({ ('-'): '_' })) }} = new app.Card({ jurl:'{{ card.url|e }}'});
+          //card_{{ card.slug|replace(({ ('-'): '_' })) }}.fetch();
           {% endif %}
         {% endfor %}
     {% endmacro %}
@@ -239,16 +261,27 @@
     $(document).ready(function() {
 
       app.cardgrid = UIkit.grid($("#card_view"), { gutter:10, duration:0 });
-      app.router = new app.Router();
+
+      setTimeout(function () {
+        app.router = new app.Router();
+
+        Backbone.history.start();
+
+      }, 850);
+      //cheap trick to make sure that the ajax models populate before we run the route
+
 
       app.eventAggregator.on('domchange:title', function (title) {
         $(document).attr('title', title);
       });
-
-      Backbone.history.start();
+      
 
       $(document).bind('keyup', 'alt+s', function () { $('[data-search-input]').focus() });
-      $(document).bind('keydown', 'ctrl+alt+d', function () { window.location = "{{ base_url ~ config.plugins.admin.route }}"; });
+      $(document).bind('keydown', 'alt+ctrl+d', function (e) { 
+        e.preventDefault();
+        window.location = "{{ base_url ~ config.plugins.admin.route }}";
+
+      });
 
       $('[data-search-input]').on("click", function () {
          $(this).select();

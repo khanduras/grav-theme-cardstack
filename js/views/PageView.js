@@ -1,7 +1,7 @@
 app.PageView = Backbone.View.extend({
   tagName: 'div',
   render: function(eventName) {
-    renderTemplate( '/cards/' + app.Page, this.el, this.model.toJSON());
+    app.renderTemplate( '/cards/' + app.Page, this.el, this.model.toJSON());
     return this;
   },
 /*  render: function(){
