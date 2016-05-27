@@ -1,3 +1,9 @@
+# v1.1.2
+## 05/26/2016
+
+1. [](#improved)
+    * Fixed base_url for async calls
+
 # v1.1.1
 ## 05/26/2016
 
