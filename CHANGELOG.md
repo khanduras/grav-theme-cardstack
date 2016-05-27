@@ -1,3 +1,12 @@
+# v1.1.1
+## 05/26/2016
+
+1. [](#new)
+    * French language support
+
+1. [](#improved)
+    * base_url for async calls
+
 # v1.1.0
 ## 05/26/2016
 

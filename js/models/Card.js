@@ -12,6 +12,6 @@ app.Card = Backbone.Model.extend({
         });
     },
 	url: function() {
-		return app.base_url + this.jurl +'.json';
+		return this.jurl +'.json';
 	}
 });

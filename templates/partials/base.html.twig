@@ -239,7 +239,7 @@
           {% if card.children.count > 0 %}
             {{ _self.cardstackloop(card.children) }}
           {% endif %}
-          {% if card.header.publish_date %}var card_{{ card.slug|replace(({ ('-'): '_' })) }} = new app.Card({ jurl:'{{ card.url|e }}'});
+          {% if card.header.publish_date %}var card_{{ card.slug|replace(({ ('-'): '_' })) }} = new app.Card({ jurl:app.base_url + '{{ card.url|e }}'});
           //card_{{ card.slug|replace(({ ('-'): '_' })) }}.fetch();
           {% endif %}
         {% endfor %}
