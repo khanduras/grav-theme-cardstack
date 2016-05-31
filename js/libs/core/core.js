@@ -1,4 +1,4 @@
-/*! UIkit 2.24.3 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
+/*! UIkit 2.26.3 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
 (function(core) {
 
     if (typeof define == "function" && define.amd) { // AMD
@@ -44,7 +44,7 @@
 
     var UI = {}, _UI = global.UIkit ? Object.create(global.UIkit) : undefined;
 
-    UI.version = '2.24.3';
+    UI.version = '2.26.3';
 
     UI.noConflict = function() {
         // restore UIkit version
@@ -181,6 +181,19 @@
         };
     };
 
+    UI.Utils.throttle = function (func, limit) {
+        var wait = false;
+        return function () {
+            if (!wait) {
+                func.call();
+                wait = true;
+                setTimeout(function () {
+                    wait = false;
+                }, limit);
+            }
+        }
+    };
+
     UI.Utils.removeCssRules = function(selectorRegEx) {
         var idx, idxs, stylesheet, _i, _j, _k, _len, _len1, _len2, _ref;
 
@@ -282,12 +295,11 @@
         var d = $.Deferred();
 
         element = UI.$(element);
-        cls     = cls;
 
         element.css('display', 'none').addClass(cls).one(UI.support.animation.end, function() {
             element.removeClass(cls);
             d.resolve();
-        }).width();
+        });
 
         element.css('display', '');
 
@@ -595,7 +607,7 @@
                 var observer = new UI.support.mutationobserver(UI.Utils.debounce(function(mutations) {
                     fn.apply(element, []);
                     $element.trigger('changed.uk.dom');
-                }, 50));
+                }, 50), {childList: true, subtree: true});
 
                 // pass in the target node, as well as the observer options
                 observer.observe(element, { childList: true, subtree: true });
@@ -628,15 +640,6 @@
 
             UI.$body = UI.$('body');
 
-            UI.ready(function(context){
-                UI.domObserve('[data-uk-observe]');
-            });
-
-            UI.on('changed.uk.dom', function(e) {
-                UI.init(e.target);
-                UI.Utils.checkDisplay(e.target);
-            });
-
             UI.trigger('beforeready.uk.dom');
 
             UI.component.bootComponents();
@@ -644,22 +647,29 @@
             // custom scroll observer
             requestAnimationFrame((function(){
 
-                var memory = {x: window.pageXOffset, y:window.pageYOffset}, dir;
+                var memory = {dir: {x:0, y:0}, x: window.pageXOffset, y:window.pageYOffset};
 
                 var fn = function(){
+                    // reading this (window.page[X|Y]Offset) causes a full page recalc of the layout in Chrome,
+                    // so we only want to do this once
+                    var wpxo = window.pageXOffset;
+                    var wpyo = window.pageYOffset;
 
-                    if (memory.x != window.pageXOffset || memory.y != window.pageYOffset) {
+                    // Did the scroll position change since the last time we were here?
+                    if (memory.x != wpxo || memory.y != wpyo) {
 
-                        dir = {x: 0 , y: 0};
+                        // Set the direction of the scroll and store the new position
+                        if (wpxo != memory.x) {memory.dir.x = wpxo > memory.x ? 1:-1; } else { memory.dir.x = 0; }
+                        if (wpyo != memory.y) {memory.dir.y = wpyo > memory.y ? 1:-1; } else { memory.dir.y = 0; }
 
-                        if (window.pageXOffset != memory.x) dir.x = window.pageXOffset > memory.x ? 1:-1;
-                        if (window.pageYOffset != memory.y) dir.y = window.pageYOffset > memory.y ? 1:-1;
+                        memory.x = wpxo;
+                        memory.y = wpyo;
 
-                        memory = {
-                            "dir": dir, "x": window.pageXOffset, "y": window.pageYOffset
-                        };
-
-                        UI.$doc.trigger('scrolling.uk.document', [memory]);
+                        // Trigger the scroll event, this could probably be sent using memory.clone() but this is
+                        // more explicit and easier to see exactly what is being sent in the event.
+                        UI.$doc.trigger('scrolling.uk.document', [{
+                            "dir": {"x": memory.dir.x, "y": memory.dir.y}, "x": wpxo, "y": wpyo
+                        }]);
                     }
 
                     requestAnimationFrame(fn);
@@ -703,6 +713,37 @@
 
             // mark that domready is left behind
             UI.domready = true;
+
+            // auto init js components
+            if (UI.support.mutationobserver) {
+
+                var initFn = UI.Utils.debounce(function(){
+                    requestAnimationFrame(function(){ UI.init(document.body);});
+                }, 10);
+
+                (new UI.support.mutationobserver(function(mutations) {
+
+                    var init = false;
+
+                    mutations.every(function(mutation){
+
+                        if (mutation.type != 'childList') return true;
+
+                        for (var i = 0, node; i < mutation.addedNodes.length; ++i) {
+
+                            node = mutation.addedNodes[i];
+
+                            if (node.outerHTML && node.outerHTML.indexOf('data-uk-') !== -1) {
+                                return (init = true) && false;
+                            }
+                        }
+                        return true;
+                    });
+
+                    if (init) initFn();
+
+                })).observe(document.body, {childList: true, subtree: true});
+            }
         };
 
         if (document.readyState == 'complete' || document.readyState == 'interactive') {

@@ -12,7 +12,7 @@ There are three ways to install Cardstack. The preferred method is using the Adm
 
 ## Admin Panel (Preferred)
 
-Installing from the Admin Panel is the easiest if the plugin is already installed.
+Installing from the Admin Panel is the easiest if the Admin plugin is already installed.
 
 * Login to your Admin Panel
 * Select **Themes** on the left menu
@@ -22,9 +22,11 @@ Installing from the Admin Panel is the easiest if the plugin is already installe
 
 This will install the Cardstack theme into your `/user/themes` directory within Grav. Its files can be found under `/your/site/grav/user/themes/cardstack`.
 
+Once installed you will have to go back to themes to activate it.
+
 ## GPM Installation
 
-The simplest way to install this theme is via the [Grav Package Manager (GPM)](http://learn.getgrav.org/advanced/grav-gpm) through your system's Terminal (also called the command line).  From the root of your Grav install type:
+The second easiest way to install this theme is via the [Grav Package Manager (GPM)](http://learn.getgrav.org/advanced/grav-gpm) through your system's Terminal (also called the command line).  From the root of your Grav install type:
 
 ``` 
 bin/gpm install cardstack
@@ -76,11 +78,13 @@ Manually updating Cardstack is pretty simple. Here is what you will need to do t
 * BackboneJS theme for Grav
 * Built with UI Kit framework
 * Card-style layout pulls from Grav's pages
+* Mobile ready! Responsive layout
 * Page blueprints for Cards and Authors
 * Quick Search to filter by string 
 * Category and Tag taxonomy filtering
 * Custom navbar menu items for front page and all child pages
 * Language file for easy translation (Pull requests welcomed)
+* Languages avaialable: `en`, `fr`
 
 ### Supported Page Templates
 
@@ -259,7 +263,7 @@ The `navbar` menu is also a Page that has to be created and configured. Menu hie
 
 ### Author Hierarchy
 
-When `page.header.author.name` is referenced on Cards and Pages Grav will search `{{ baseurl }}/authors/{{ author.name }}.htm` with a few twig filters to normalize the request. If there's am Author Page at that location, it will perform an AJAX request to retrieve that html and display it.
+When `page.header.author.name` is referenced on Cards and Pages Grav will search `{{ baseurl }}/authors/{{ author.name }}.htm` with a few twig filters to normalize the request. If there's an Author Page at that location, it will perform an AJAX request to retrieve that html and display it.
 
 ## Report Issues
 

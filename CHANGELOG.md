@@ -1,3 +1,13 @@
+# v1.1.3
+## 05/30/2016
+
+1. [](#improved)
+    * Ensured base_url is added when navbar url begins with `/`
+    * Only fetches each card once
+    * Search and Dashboard buttons in navbar
+    * Other minor UI changes
+    * Updated UIKit to v2.26.3
+
 # v1.1.2
 ## 05/26/2016
 

@@ -10,6 +10,8 @@
         {% do assets.addCss('theme://css/style.css') %}
         {% do assets.addCss('theme://css/uikit.min.css') %}
         {% do assets.addCss('theme://css/uikit.gradient.min.css') %}
+        {% do assets.addCss('theme://css/components/tooltip.min.css.css') %}
+        {% do assets.addCss('theme://css/components/tooltip.gradient.min.css') %}
         {% do assets.addCss('theme://css/base.style.css') %}
         {% do assets.addCss('theme://css/card.style.css') %}
         
@@ -22,6 +24,7 @@
     var app = {};
     app.site_title = "{{ site.title }}";
     app.base_url = "{{ base_url }}";
+    app.admin_dash_url = "{{ base_url }}{{ config.plugins.admin.route }}";
     </script>
 
   </head>
@@ -45,64 +48,94 @@
         {% set navbar_menus = page.find('/menus/navbar').header.items %}
         {% for button in navbar_menus %}
             {% if button.url %} 
-                <li {% if button.li_class %}class="{{ button.li_class }}"{% endif %}><a class="{% if button.subtitle %}uk-navbar-nav-subtitle {% endif %}{% if button.anchor_class %}{{ button.anchor_class }}{% endif %}" href="{{ button.url }}" style="{% if button.back_color %}background: {{ button.back_color }};{% endif %}{% if button.fore_color %}color: {{ button.fore_color }};{% endif %}">{% if button.icon %}<i class="uk-icon-{{ button.icon }}"></i> {% endif %}{% if button.title %}{{ button.title }}{% endif %}{% if button.subtitle %}<div>{{ button.subtitle }}</div>{% endif %}</a></li>
+                <li {% if button.li_class %}class="{{ button.li_class }}"{% endif %}><a class="{% if button.subtitle %}uk-navbar-nav-subtitle {% endif %}{% if button.anchor_class %}{{ button.anchor_class }}{% endif %}" href="{% if button.url starts with '/' %}{{ base_url }}{% endif %}{{ button.url }}" style="{% if button.back_color %}background: {{ button.back_color }};{% endif %}{% if button.fore_color %}color: {{ button.fore_color }};{% endif %}">{% if button.icon %}<i class="uk-icon-{{ button.icon }}"></i> {% endif %}{% if button.title %}{{ button.title }}{% endif %}{% if button.subtitle %}<div>{{ button.subtitle }}</div>{% endif %}</a></li>
             {% endif %}
         {% endfor %}
       </ul>
     </div>
   </div>
   <div class="wrapper">
-    <nav class="uk-navbar uk-navbar-attached" data-uk-sticky="{top:0}">
+    <nav class="sticky_navbar uk-navbar uk-navbar-attached">
+        <a class="uk-hidden-medium uk-hidden-large uk-navbar-toggle" data-uk-offcanvas="{target:'#offcanvas-mobile'}"></a>
+        <div class="uk-navbar-content">
+          
+          <a href="{{ base_url }}/#" class="uk-hidden-small uk-navbar-brand"><i class="uk-icon-home"></i> {{ site.title }}</a>
+          <a href="{{ base_url }}/#" class="left-navbar-zone uk-hidden-medium uk-hidden-large uk-navbar-brand"><i class="uk-icon-home"></i> {{ site.title }}</a>
+          <ul class="uk-navbar-nav">
+            {% set taxlist = taxonomylist.get() %}
 
-      <div class="uk-navbar-content">
-        <a href="#" class="uk-hidden-medium uk-hidden-large uk-navbar-toggle" data-uk-offcanvas="{target:'#offcanvas-mobile'}"></a>
-        <a href="{{ base_url }}/#" class="uk-navbar-brand"><i class="uk-icon-home"></i> {{ site.title }}</a>
-        <ul class="uk-navbar-nav">
-          {% set taxlist = taxonomylist.get() %}
+            {% if taxlist['category'] %}
+                <li class="uk-parent uk-hidden-small uk-hidden-medium" data-uk-dropdown="{mode:'hover'}">
+                  <a><i class="uk-icon-list-alt"></i> {{ 'NAVBAR_CATEGORY_LABEL'|t }} <i class="uk-icon-caret-down"></i></a>
+                  <div class="uk-dropdown uk-dropdown-navbar uk-dropdown-top uk-dropdown-scrollable">
+                    <ul class="uk-nav uk-nav-navbar">
+                      {% for tax,value in taxlist['category'] %}
+                        <li><a href="{{ base_url }}/#{{ tax|lower|replace(({ (' '): '_' })) }}">{{ tax|titleize }}</a></li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                </li>
+            {% endif %}
+            {% if taxlist['category'] %}
+                <li class="left-navbar-zone uk-parent uk-hidden-small uk-hidden-large" data-uk-dropdown="{mode:'hover'}">
+                  <a><i class="uk-icon-list-alt"></i> {{ 'NAVBAR_CATEGORY_LABEL'|t }} <i class="uk-icon-caret-down"></i></a>
+                  <div class="uk-dropdown uk-dropdown-navbar uk-dropdown-top uk-dropdown-scrollable">
+                    <ul class="uk-nav uk-nav-navbar">
+                      {% for tax,value in taxlist['category'] %}
+                        <li><a href="{{ base_url }}/#{{ tax|lower|replace(({ (' '): '_' })) }}">{{ tax|titleize }}</a></li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                </li>
+            {% endif %}
 
-          {% if taxlist['category'] %}
-              <li class="uk-parent uk-hidden-small" data-uk-dropdown="{mode:'hover'}">
-                <a><i class="uk-icon-list-alt"></i> {{ 'NAVBAR_CATEGORY_LABEL'|t }} <i class="uk-icon-caret-down"></i></a>
-                <div class="uk-dropdown uk-dropdown-navbar uk-dropdown-top uk-dropdown-scrollable">
-                  <ul class="uk-nav uk-nav-navbar">
-                    {% for tax,value in taxlist['category'] %}
-                      <li><a href="{{ base_url }}/#{{ tax|lower|replace(({ (' '): '_' })) }}">{{ tax|titleize }}</a></li>
-                    {% endfor %}
-                  </ul>
-                </div>
-              </li>
-          {% endif %}
-
-    
       
-          {% set navbar_menus = page.find('/menus/navbar').header.items %}
-          {% for button in navbar_menus %}
-              {% if button.url %} 
-                  <li {% if button.li_class %}class="uk-hidden-small {{ button.li_class }}"{% endif %}><a class="{% if button.subtitle %}uk-navbar-nav-subtitle {% endif %}{% if button.anchor_class %}{{ button.anchor_class }}{% endif %}" href="{{ button.url }}" style="{% if button.back_color %}background: {{ button.back_color }};{% endif %}{% if button.fore_color %}color: {{ button.fore_color }};{% endif %}">{% if button.icon %}<i class="uk-icon-{{ button.icon }}"></i> {% endif %}{% if button.title %}{{ button.title }}{% endif %}{% if button.subtitle %}<div>{{ button.subtitle }}</div>{% endif %}</a></li>
-              {% endif %}
-          {% endfor %}
+        
+            {% set navbar_menus = page.find('/menus/navbar').header.items %}
+            {% for button in navbar_menus %}
+                {% if button.url %} 
+                    <li {% if button.li_class %}class="uk-hidden-small uk-hidden-medium {{ button.li_class }}"{% endif %}><a class="{% if button.subtitle %}uk-navbar-nav-subtitle {% endif %}{% if button.anchor_class %}{{ button.anchor_class }}{% endif %}" href="{% if button.url starts with '/' %}{{ base_url }}{% endif %}{{ button.url }}" style="{% if button.back_color %}background: {{ button.back_color }};{% endif %}{% if button.fore_color %}color: {{ button.fore_color }};{% endif %}">{% if button.icon %}<i class="uk-icon-{{ button.icon }}"></i> {% endif %}{% if button.title %}{{ button.title }}{% endif %}{% if button.subtitle %}<div>{{ button.subtitle }}</div>{% endif %}</a></li>
+                {% endif %}
+            {% endfor %}
+            {% set navbar_menus = page.find('/menus/navbar').header.items %}
+            {% for button in navbar_menus %}
+                {% if button.url %} 
+                    <li {% if button.li_class %}class="left-navbar-zone uk-hidden-large uk-hidden-small {{ button.li_class }}"{% endif %}><a class="{% if button.subtitle %}uk-navbar-nav-subtitle {% endif %}{% if button.anchor_class %}{{ button.anchor_class }}{% endif %}" href="{% if button.url starts with '/' %}{{ base_url }}{% endif %}{{ button.url }}" style="{% if button.back_color %}background: {{ button.back_color }};{% endif %}{% if button.fore_color %}color: {{ button.fore_color }};{% endif %}">{% if button.icon %}<i class="uk-icon-{{ button.icon }}"></i> {% endif %}{% if button.title %}{{ button.title }}{% endif %}{% if button.subtitle %}<div>{{ button.subtitle }}</div>{% endif %}</a></li>
+                {% endif %}
+            {% endfor %}
 
-        </ul>
-      </div>
-      <div class="uk-container uk-navbar-flip">
-        <form id="dropSource" class="uk-search uk-form uk-form-icon">
-          <i class="uk-icon-search uk-hidden-medium uk-hidden-small"></i> 
-          <input id="searchInput" class="uk-hidden-medium uk-hidden-small uk-form-large uk-width-1-1" type="search" placeholder="{{ 'NAVBAR_SEARCH_PLACEHOLDER'|t }} " data-search-input>
-        </form> 
-      </div>
+          </ul>
+        </div>
+        <div class="navbar-controls uk-hidden-large uk-navbar-content uk-navbar-flip">
+          <form id="dropSource" class="search-form uk-search uk-form uk-form-icon">
+            <i class="uk-icon-search"></i> 
+            <input id="searchInput" class="uk-form-large" type="search" placeholder="{{ 'NAVBAR_SEARCH_PLACEHOLDER'|t }} " data-search-input>
+          </form> 
+
+        </div>
+        <div class="navbar-controls uk-hidden-small uk-hidden-medium uk-navbar-content uk-navbar-flip">
+          <form id="dropSource" class="search-form uk-search uk-form uk-form-icon">
+            <i class="uk-icon-search"></i> 
+            <input id="searchInput" class="uk-form-large" type="search" placeholder="{{ 'NAVBAR_SEARCH_PLACEHOLDER'|t }} " data-search-input>
+          </form> 
+
+        </div>
+
     </nav>
     <div class="uk-container uk-container-center">
       <section id="card_app">
+        <div class="filter-navbar"></div>
         <div class="uk-grid">
-          <div class="uk-width-1-1">
-            <p>&nbsp;</p>
+          <div class="loading uk-width-1-1 uk-container-center uk-text-center">
+              <br>
+              <a class="uk-button uk-button-large"><i class="uk-icon-spinner uk-icon-spin"></i> Loading...</a>
           </div>
           <div id="card_page" class="uk-width-1-1">
             <p>&nbsp;</p>
           </div>
           <div class="uk-width-1-1">
             <div id="card_view" class="uk-grid-width-small-1-{{ config.themes.cardstack.cardview.columns.small }} uk-grid-width-medium-1-{{ config.themes.cardstack.cardview.columns.medium }} uk-grid-width-large-1-{{ config.themes.cardstack.cardview.columns.large }} uk-grid-width-xlarge-1-{{ config.themes.cardstack.cardview.columns.xlarge }}">
-              <p><i class="uk-icon-refresh uk-icon-spin"></i> Loading...</p>
+
             </div>
           </div>
           <div class="uk-width-1-1">
@@ -118,6 +151,7 @@
   <!-- Templates -->
   <!-- ========= -->
   <script type="text/template" id="card-template">
+  <div>
     <article class="card">
       <header class="card__thumb">
         <a href="<%- link %>"><img src="<%- image %>" ></a>
@@ -127,7 +161,7 @@
         <span class="card__date__month"><%- published_month %></span>
       </div>
       <div class="card__body">
-        <div class="card__category"><a href="{{ base_url }}/#category/<%- category_clean %>"><%- category %></a></div>
+        <div class="card__category"><a href="{{ base_url }}/category/<%- category_clean %>"><%- category %></a></div>
         <div class="card__title"><%= card_title %></div>
         <div class="card__subtitle"><%- subtitle %></div>
         <p class="card__description"><%= summary %></p>
@@ -139,8 +173,36 @@
       </div>
 
     </article>
+  </div>
   </script>  
 
+  <script type="text/template" id="controls-template">
+    <div class="left-navbar-zone filter-buttons uk-button-group uk-hidden-large">
+      <a class="search-button uk-button" data-uk-tooltip="{pos:'bottom'}" title="Search"><i class="uk-icon-search"></i></a>
+    <!--  <a class="sort-button uk-button" data-uk-tooltip="{pos:'bottom'}" title="Sort & Filter"><i class="uk-icon-sort"></i></a> -->
+      <a class="dash-button uk-button" data-uk-tooltip="{pos:'bottom'}" title="Dashboard"><i class="uk-icon-dashboard"></i></a>
+                            
+    </div>
+    <div class="filter-buttons uk-button-group uk-hidden-small uk-hidden-medium">
+      <a class="search-button uk-button" data-uk-tooltip="{pos:'bottom'}" title="Search"><i class="uk-icon-search"></i></a>
+      <!--<a class="sort-button uk-button" data-uk-tooltip="{pos:'bottom'}" title="WIP" disabled><i class="uk-icon-sort"></i></a>-->
+      <a class="dash-button uk-button" data-uk-tooltip="{pos:'bottom'}" title="Dashboard"><i class="uk-icon-dashboard"></i></a>
+                            
+    </div>
+    <a class="uk-button left-navbar-zone close-search-button uk-hidden-large uk-button-mini uk-button-danger" data-uk-tooltip="{pos:'bottom'}" title="Cancel Search"><i class="uk-icon-close"></i></a>
+  </script> 
+
+  <script type="text/template" id="filter-navbar-template">
+    <nav data-uk-sticky="{top: 52}" id="items" class="uk-navbar hidden">
+      <label class="uk-navbar-content">Sort:</label>
+      <ul class="uk-navbar-nav">
+        <li><a id="modified-desc">Modified <i class="uk-icon-sort-numeric-desc"></i></a></li>
+        <li><a id="modified-asc">Modified <i class="uk-icon-sort-numeric-asc"></i></a></li>
+        <li><a id="published-desc">Published <i class="uk-icon-sort-alpha-desc"></i></a></li>
+        <li><a id="published-asc">Published <i class="uk-icon-sort-alpha-asc"></i></a></li>
+      </ul>   
+    </nav>
+  </script>
   <!-- ========= -->
   <!-- Libraries -->
   <!-- ========= -->
@@ -153,21 +215,23 @@
       {% do assets.addJs('theme://js/libs/components/grid.min.js',100) %}
       {% do assets.addJs('theme://js/libs/components/sticky.min.js',100) %}
       {% do assets.addJs('theme://js/libs/components/dropdown.min.js',100) %}
+      {% do assets.addJs('theme://js/libs/components/tooltip.min.js',100) %}
       {% do assets.addJs('theme://js/plugins/jquery.hotkeys.js',100) %}
   {% endblock %}
 
 
- {% do assets.addJs('theme://js/models/Card.js',100) %}
+
 
   <!-- =============== -->
   <!-- Scripts -->
   <!-- =============== -->  
-
+  {% do assets.addJs('theme://js/models/Card.js',100) %}
   {% do assets.addJs('theme://js/scripts/ApplicationRouter.js',100) %}
   {% do assets.addJs('theme://js/views/CardView.js',100) %}
   {% do assets.addJs('theme://js/views/AppView.js',100) %}
   {% do assets.addJs('theme://js/views/PageView.js',100) %}
   {% do assets.addJs('theme://js/views/AuthorView.js',100) %}
+  {% do assets.addJs('theme://js/views/FilterView.js',100) %}
   {{ assets.js() }}
   <!-- =============== -->
   <!-- Javascript code -->
@@ -233,20 +297,17 @@
     // Cards
     //--------------
 
-    {% macro cardlistloop(stack) %}{% for card in stack %}{% if card.header.publish_date %}{{ loop.first ? ', ' }}card_{{ card.slug|replace(({ ('-'): '_' })) }}{{ not cardlistloop.last ? ', ' }}{% endif %}{% if card.children.count > 0 %}{{ _self.cardlistloop(card.children) }}{% endif %}{% endfor %}{% endmacro %}
+    {% macro cardlistloop(stack) %}{% for card in stack %}{% if card.header.publish_date %}{{ loop.first ? ', ' }}card_{{ card.slug|replace(({ ('-'): '_' })) }}{{ not cardlistloop.last ? ', ' }}{% endif %}{% endfor %}{% endmacro %}
 
     {% macro cardstackloop(stack) %}
-        {% for card in stack %}
-          {% if card.children.count > 0 %}
-            {{ _self.cardstackloop(card.children) }}
-          {% endif %}
-          {% if card.header.publish_date %}var card_{{ card.slug|replace(({ ('-'): '_' })) }} = new app.Card({ jurl:'{{ card.url|e }}'});
-          //card_{{ card.slug|replace(({ ('-'): '_' })) }}.fetch();
-          {% endif %}
+    {% for card in stack %}{% if card.header.publish_date %}var card_{{ card.slug|replace(({ ('-'): '_' })) }} = new app.Card({ jurl:'{{ card.url|e }}' });
+        {% else %}console.log("{{ card.slug }}");
+        {% endif %}
         {% endfor %}
     {% endmacro %}
 
-    {% set cardstack = page.find('/cards').children %}
+    {# set cardstack = page.find(config.themes.cardstack.cardstack_route).children #}
+    {% set cardstack = page.collection('cards') %}
     {{ _self.cardstackloop(cardstack) }}
 
     // instance of the Collection
@@ -258,16 +319,22 @@
     app.eventAggregator = _.extend(app, Backbone.Events);
 
     app.appView = new app.AppView();
+    app.filterView = new app.FilterView();
+    app.filterView.render();
 
     $(document).ready(function() {
 
+      
       app.cardgrid = UIkit.grid($("#card_view"), { gutter:10, duration:0 });
 
       setTimeout(function () {
+
+        app.navbar_sticky = UIkit.sticky(".sticky_navbar", {top:0});
+        
         app.router = new app.Router();
 
         Backbone.history.start();
-
+  
       }, 850);
       //cheap trick to make sure that the ajax models populate before we run the route
 
@@ -277,11 +344,19 @@
       });
       
 
-      $(document).bind('keyup', 'alt+s', function () { $('[data-search-input]').focus() });
+      $(document).bind('keyup', 'alt+s', function () {
+        $('.navbar-controls.uk-hidden-large').addClass('hidden');
+        $('.left-navbar-zone').fadeToggle();
+        $('.search-form').fadeToggle();
+        setTimeout(function () {
+          $('.navbar-controls.uk-hidden-large').removeClass('hidden');
+        }, 425);
+        $('[data-search-input]').focus() 
+      });
       $(document).bind('keydown', 'alt+ctrl+d', function (e) { 
         e.preventDefault();
-        window.location = "{{ base_url ~ config.plugins.admin.route }}";
-
+        var win = window.open(app.admin_dash_url, '_blank');
+        win.focus();
       });
 
       $('[data-search-input]').on("click", function () {
@@ -311,6 +386,9 @@
             app.router.navigate('/search/' + $(this).val(), {trigger: true, replace: false} );
           }
       });
+
+
+
 
     });
 

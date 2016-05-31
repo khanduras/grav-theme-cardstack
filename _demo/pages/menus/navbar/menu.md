@@ -11,7 +11,7 @@ items:
     1:
         title: News
         subtitle: 'Company News'
-        url: '/cardstack/#company_news'
+        url: '/#company_news'
         icon: newspaper-o
         fore_color: ''
         back_color: ''
@@ -20,7 +20,7 @@ items:
     2:
         title: Product
         subtitle: 'Releases and Sales'
-        url: '/cardstack/#product_releases'
+        url: '/#product_releases'
         icon: shopping-basket
         fore_color: ''
         back_color: ''
@@ -29,7 +29,7 @@ items:
     3:
         title: 'Site Updates'
         subtitle: ''
-        url: '/cardstack/#site_updates'
+        url: '/#site_updates'
         icon: puzzle-piece
         fore_color: ''
         back_color: ''
