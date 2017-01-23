@@ -1,3 +1,10 @@
+## Fixes
+
+This is a modified cardstack theme with compatability added for inheritance.
+A pull request has been lodged.
+https://github.com/khanduras/grav-theme-cardstack/pull/13
+
+
 # Cardstack
 
 Cardstack is a single page application page powered with [Grav CMS](https://getgrav.org/), [BackboneJS](http://backbonejs.org/) and [UI Kit](http://getuikit.com/).
