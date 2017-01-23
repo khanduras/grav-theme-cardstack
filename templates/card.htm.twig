@@ -3,7 +3,7 @@
         {% if page.header.link %}
             <h1>
                 {% if page.header.continue_link and page.header.continue_link is not sameas(false) %}
-                <a href="<%- link %>"><i class="uk-icon-{% if page.header.override_link_icon %}{{ page.header.override_link_icon }}{% else %}{{ config.themes.cardstack.continueLinkIcon }}{% endif %}"></i></a>
+                <a href="<%- link %>"><i class="uk-icon-{% if page.header.override_link_icon %}{{ page.header.override_link_icon }}{% else %}{{ theme_config.continueLinkIcon }}{% endif %}"></i></a>
                 {% endif %}
                 <a href="{{ page.header.link }}" target="_new">{{ page.title }}</a>
             </h1>
