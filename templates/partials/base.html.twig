@@ -1,3 +1,4 @@
+{% set theme_config = attribute(config.themes, config.system.pages.theme) %}
 <!DOCTYPE html>
 <html class="uk-height-1-1" lang="{{ grav.language.getActive ?: theme_config.default_lang }}">
   <head>
@@ -134,7 +135,7 @@
             <p>&nbsp;</p>
           </div>
           <div class="uk-width-1-1">
-            <div id="card_view" class="uk-grid-width-small-1-{{ config.themes.cardstack.cardview.columns.small }} uk-grid-width-medium-1-{{ config.themes.cardstack.cardview.columns.medium }} uk-grid-width-large-1-{{ config.themes.cardstack.cardview.columns.large }} uk-grid-width-xlarge-1-{{ config.themes.cardstack.cardview.columns.xlarge }}">
+            <div id="card_view" class="uk-grid-width-small-1-{{ theme_config.cardview.columns.small }} uk-grid-width-medium-1-{{ theme_config.cardview.columns.medium }} uk-grid-width-large-1-{{ theme_config.cardview.columns.large }} uk-grid-width-xlarge-1-{{ theme_config.cardview.columns.xlarge }}">
 
             </div>
           </div>
@@ -306,7 +307,7 @@
         {% endfor %}
     {% endmacro %}
 
-    {# set cardstack = page.find(config.themes.cardstack.cardstack_route).children #}
+    {# set cardstack = page.find(theme_config.cardstack_route).children #}
     {% set cardstack = page.collection('cards') %}
     {{ _self.cardstackloop(cardstack) }}
 
