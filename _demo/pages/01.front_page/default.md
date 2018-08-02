@@ -1,7 +1,12 @@
+
 ---
 title: Index
+cards:
+    items:
+        '@page.descendants': /cards
+    order:
+        by: date
+        dir: desc
+    limit: 50
+    pagination: true
 ---
-
-This is the first page people see
-
-It will be the most popular Tools, Forms and Notices in view.
