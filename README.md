@@ -161,6 +161,10 @@ link: http://getgrav.org/blog
 
 This will show up on both the Card and the Card's page.
 
+##### Card Images
+
+Within card.md you can add an optional line to the YAML head information: `header_image_file`. The value for this YAML line will be the name of the image, which is stored locally with your `card.md` file.
+
 ### Page View Feature
 
 Selecting a Card will bring up the route ```/#page/<page_route>```, full Page view. This view will make an AJAX call to the `card.htm.twig` template which is  customizable using both twig templating and Backbone/Underscore JS templating.
